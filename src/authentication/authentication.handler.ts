@@ -5,27 +5,34 @@ import { config } from '../config';
 import { Application, Response, Request } from 'express';
 import { UsersRpc } from '../user/user.rpc';
 import { IUser } from '../user/user.interface';
+import * as jwt from 'jsonwebtoken';
 
-export class AuthenticationController {
+export class AuthenticationHandler {
 
     static initialize(app: Application) {
         app.use(passport.initialize());
 
-        passport.serializeUser(AuthenticationController.serialize);
-        passport.deserializeUser(AuthenticationController.deserialize);
+        passport.serializeUser(AuthenticationHandler.serialize);
+        passport.deserializeUser(AuthenticationHandler.deserialize);
 
         passport.use(new Strategy(
             config.authentication.saml as SamlConfig,
-            AuthenticationController.verifyUser,
+            AuthenticationHandler.verifyUser,
         ));
 
-        app.get('/login', AuthenticationController.authenticate());
-        app.get('/metadata.xml', AuthenticationController.sendMetadata);
-        app.all('/metadata.xml/callback', AuthenticationController.authenticate(), (req: any, res: any) => {
-            return res.json(req.user);
-        });
+        app.get('/login', AuthenticationHandler.authenticate());
+        app.get('/metadata.xml', AuthenticationHandler.sendMetadata);
+        app.all('/metadata.xml/callback', AuthenticationHandler.authenticate(), AuthenticationHandler.handleUser);
 
         return passport.initialize();
+    }
+
+    private static handleUser(req: Request, res: Response) {
+        const userToken = jwt.sign(req.user, config.authentication.secret);
+
+        res.status(200)
+            .cookie('bs-token', userToken)
+            .json(req.user);
     }
 
     private static authenticate() {
