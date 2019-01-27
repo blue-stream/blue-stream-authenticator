@@ -5,7 +5,7 @@ import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import { config } from './config';
 import { userErrorHandler, serverErrorHandler, unknownErrorHandler } from './utils/errors/errorHandler';
-import { AuthenticationController } from './authentication/authentication.handler';
+import { AuthenticationHandler } from './authentication/authentication.handler';
 
 export class Server {
     public app: express.Application;
@@ -52,7 +52,7 @@ export class Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
 
-        AuthenticationController.initialize(this.app);
+        AuthenticationHandler.initialize(this.app);
     }
 
     private initializeErrorHandler() {
