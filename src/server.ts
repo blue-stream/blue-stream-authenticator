@@ -6,6 +6,7 @@ import * as morgan from 'morgan';
 import { config } from './config';
 import { userErrorHandler, serverErrorHandler, unknownErrorHandler } from './utils/errors/errorHandler';
 import { AuthenticationHandler } from './authentication/authentication.handler';
+import { AuthenticationRouter } from './authentication/authentication.router';
 
 export class Server {
     public app: express.Application;
@@ -19,6 +20,7 @@ export class Server {
         this.app = express();
         this.configureMiddlewares();
         this.initializeErrorHandler();
+        this.initializeAuthenticator();
         this.server = http.createServer(this.app);
         this.server.listen(config.server.port, () => {
             console.log(`Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
@@ -51,13 +53,16 @@ export class Server {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-
-        AuthenticationHandler.initialize(this.app);
     }
 
     private initializeErrorHandler() {
         this.app.use(userErrorHandler);
         this.app.use(serverErrorHandler);
         this.app.use(unknownErrorHandler);
+    }
+
+    private initializeAuthenticator() {
+        AuthenticationHandler.initialize(this.app);
+        this.app.use(AuthenticationRouter);
     }
 }
