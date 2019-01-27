@@ -20,14 +20,10 @@ export class AuthenticationHandler {
             AuthenticationHandler.verifyUser,
         ));
 
-        app.get('/login', AuthenticationHandler.authenticate());
-        app.get('/metadata.xml', AuthenticationHandler.sendMetadata);
-        app.all('/metadata.xml/callback', AuthenticationHandler.authenticate(), AuthenticationHandler.handleUser);
-
         return passport.initialize();
     }
 
-    private static handleUser(req: Request, res: Response) {
+    static handleUser(req: Request, res: Response) {
         const userToken = jwt.sign(req.user, config.authentication.secret);
 
         res.status(200)
@@ -35,18 +31,18 @@ export class AuthenticationHandler {
             .json(req.user);
     }
 
-    private static authenticate() {
+    static authenticate() {
         return passport.authenticate('saml', {
             failureRedirect: '/failed',
             failureFlash: true,
         });
     }
 
-    private static sendMetadata(req: Request, res: Response) {
+    static sendMetadata(req: Request, res: Response) {
         res.sendFile(path.resolve(`${__dirname}/../../assets/metadata.xml`));
     }
 
-    private static async verifyUser(profile: any, done: any) {
+    static async verifyUser(profile: any, done: any) {
         const userData: IUser = {
             id: profile[config.authentication.profileExtractor.id],
             firstName: profile[config.authentication.profileExtractor.firstName],
