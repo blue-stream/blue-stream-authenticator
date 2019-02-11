@@ -26,9 +26,8 @@ export class AuthenticationHandler {
     static handleUser(req: Request, res: Response) {
         const userToken = jwt.sign(req.user, config.authentication.secret);
 
-        res.status(200)
-            .cookie('bs-token', userToken)
-            .json(req.user);
+        res.cookie('bs-token', userToken);
+        res.redirect(config.clientEndpoint);
     }
 
     static authenticate() {
