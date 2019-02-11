@@ -43,4 +43,5 @@ export const config = {
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
         },
     },
+    clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost:4200',
 };
