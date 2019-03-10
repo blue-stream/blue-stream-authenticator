@@ -7,6 +7,7 @@ import { config } from './config';
 import { userErrorHandler, serverErrorHandler, unknownErrorHandler } from './utils/errors/errorHandler';
 import { AuthenticationHandler } from './authentication/authentication.handler';
 import { AuthenticationRouter } from './authentication/authentication.router';
+import { HealthRouter } from './utils/health/health.router';
 
 export class Server {
     public app: express.Application;
@@ -21,6 +22,7 @@ export class Server {
         this.configureMiddlewares();
         this.initializeErrorHandler();
         this.initializeAuthenticator();
+        this.initializeHealthCheck();
         this.server = http.createServer(this.app);
         this.server.listen(config.server.port, () => {
             console.log(`Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
@@ -64,5 +66,9 @@ export class Server {
     private initializeAuthenticator() {
         AuthenticationHandler.initialize(this.app);
         this.app.use(AuthenticationRouter);
+    }
+
+    private initializeHealthCheck() {
+        this.app.use(HealthRouter);
     }
 }
