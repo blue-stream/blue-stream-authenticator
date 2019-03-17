@@ -1,13 +1,8 @@
 export const config = {
     logger: {
-        durable: false,
-        exchangeType: process.env.RMQ_LOGGER_TYPE || 'topic',
-        exchange: process.env.RMQ_LOGGER_EXCHANGE || 'blue_stream_logs',
-        host: process.env.RMQ_LOGGER_HOST || 'localhost',
-        port: +(process.env.RMQ_LOGGER_PORT || 15672),
-        password: process.env.RMQ_LOGGER_PASS || 'guest',
-        username: process.env.RMQ_LOGGER_USER || 'guest',
-        persistent: false,
+        elasticsearch: process.env.LOGGER_ELASTICSEARCH && {
+            hosts: process.env.LOGGER_ELASTICSEARCH.split(','),
+        },
     },
     server: {
         port: +(process.env.PORT || 3000),
