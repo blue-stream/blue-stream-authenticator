@@ -1,25 +1,26 @@
 import { Server } from './server';
+import { log } from './utils/logger';
 
 process.on('uncaughtException', (err) => {
-    console.error('Unhandled Exception', err.stack);
+    log('error', 'Unhandled Exception', err.message, undefined, undefined, { error: err });
     process.exit(1);
 });
 
 process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection', err);
+    log('error', 'Unhandled Rejection', err.message, undefined, undefined, { error: err });
     process.exit(1);
 });
 
 process.on('SIGINT', async () => {
-    console.log('User Termination');
+    log('info', 'User Termination', 'application was terminated by the user (SIGINT event)');
     process.exit(0);
 });
 
 (async () => {
-    console.log('Starting server');
+    log('verbose', 'Server', 'Starting server');
     const server: Server = Server.bootstrap();
 
     server.app.on('close', () => {
-        console.log('Server closed');
+        log('verbose', 'Server', 'Server closed');
     });
 })();

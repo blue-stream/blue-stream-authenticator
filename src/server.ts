@@ -8,6 +8,7 @@ import { userErrorHandler, serverErrorHandler, unknownErrorHandler } from './uti
 import { AuthenticationHandler } from './authentication/authentication.handler';
 import { AuthenticationRouter } from './authentication/authentication.router';
 import { HealthRouter } from './utils/health/health.router';
+import { log } from './utils/logger';
 
 export class Server {
     public app: express.Application;
@@ -25,7 +26,7 @@ export class Server {
         this.initializeHealthCheck();
         this.server = http.createServer(this.app);
         this.server.listen(config.server.port, () => {
-            console.log(`Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
+            log('verbose', 'Server', `Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
         });
     }
 
