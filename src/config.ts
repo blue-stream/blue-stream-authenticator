@@ -7,6 +7,7 @@ export const config = {
     server: {
         port: +(process.env.PORT || 3000),
         name: 'authentication',
+        endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:3000/auth',
     },
     cors: {
         allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:4200'],
