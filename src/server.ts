@@ -66,7 +66,7 @@ export class Server {
 
     private initializeAuthenticator() {
         AuthenticationHandler.initialize(this.app);
-        this.app.use(AuthenticationRouter);
+        this.app.use('/auth/', AuthenticationRouter);
     }
 
     private initializeHealthCheck() {
