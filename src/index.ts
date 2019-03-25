@@ -1,3 +1,14 @@
+import { config } from './config';
+const apm = require('elastic-apm-node');
+
+if (config.apm.isActive) {
+    apm.start({
+        serviceName: config.server.name,
+        serverUrl: config.apm.server,
+        captureBody: 'all',
+    });
+}
+
 import { Server } from './server';
 import { log } from './utils/logger';
 
