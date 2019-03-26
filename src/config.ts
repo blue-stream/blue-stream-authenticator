@@ -6,7 +6,7 @@ export const config = {
     },
     server: {
         port: +(process.env.PORT || 3000),
-        name: 'authentication',
+        name: 'blue-stream-authenticator',
         endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:3000/auth',
     },
     cors: {
@@ -38,6 +38,10 @@ export const config = {
             lastName: process.env.PROFILE_EXTRACTOR_LAST_NAME || 'surName',
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
         },
+    },
+    apm: {
+        server: process.env.APM_SERVER || 'http://apm:8200',
+        isActive: process.env.APM_ACTIVE || true,
     },
     clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost:4200',
 };
