@@ -1,7 +1,7 @@
 {
   "name": "blue-stream-authenticator",
-  "version": "0.0.0",
-  "description": "Blue Stream authenticator - Handles authentication and generates user token",
+  "version": "0.1",
+  "description": "Suthenticator - Handles authentication and generates user token",
   "main": "index.js",
   "scripts": {
     "start": "tsc && node ./dist/index.js",
@@ -9,7 +9,7 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "release": "standard-version"
   },
-  "author": "Ron Borysovski",
+  "author": "Ron Borysovski & Yonatan Tal",
   "license": "ISC",
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
@@ -22,7 +22,7 @@
     "@types/morgan": "^1.7.35",
     "@types/node": "^10.12.1",
     "@types/passport": "^0.4.6",
-    "@types/passport-saml": "^1.0.0",
+    "@types/passport-saml": "^1.0.2",
     "chai": "^4.2.0",
     "cross-env": "^5.2.0",
     "mocha": "^5.2.0",
@@ -31,11 +31,13 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.3.4000"
   },
   "dependencies": {
+    "@grpc/proto-loader": "^0.4.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "grpc": "^1.19.0",
     "helmet": "^3.14.0",
     "jayson": "^2.1.1",
     "jsonwebtoken": "^8.4.0",

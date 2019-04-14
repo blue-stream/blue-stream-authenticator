@@ -18,7 +18,7 @@ export const config = {
     },
     users: {
         endpoint: process.env.USERS_RPC_ENDPOINT || 'http://localhost',
-        port: +(process.env.USERS_RPC_PORT || 6000),
+        port: +(process.env.USERS_RPC_PORT || 50051),
         methods: {
             GET_USER_BY_ID: 'getUserById',
             CREATE_USER: 'createUser',

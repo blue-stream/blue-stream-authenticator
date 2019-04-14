@@ -1,20 +1,32 @@
-import { config } from '../config';
 import { IUser } from './user.interface';
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
 
-const jayson = require('jayson/promise');
+const PROTO_PATH = `${__dirname}/../../protos/users.proto`;
 
+const packageDefinition = protoLoader.loadSync(
+    PROTO_PATH,
+    {
+        keepCase: true,
+        longs: String,
+        enums: String,
+        defaults: true,
+        oneofs: true,
+    });
+const users_proto = grpc.loadPackageDefinition(packageDefinition).users;
+const client = new users_proto.Users('users-service:50051',
+                                     grpc.credentials.createInsecure());
 export class UsersRpc {
-    private static rpcClient = jayson.Client.http(`${config.users.endpoint}:${config.users.port}`);
 
-    static async getUserById(id: string) {
-        const response = await UsersRpc.rpcClient.request(config.users.methods.GET_USER_BY_ID, { id });
-
-        return response.result;
-    }
-
-    static async createUser(user: IUser) {
-        const response = await UsersRpc.rpcClient.request(config.users.methods.CREATE_USER, user);
-
-        return response.result;
+    static async getUserById(mail: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            client.GetUserByMail({ mail }, (err: any, res: any) => {
+                if (err) {
+                    reject(err);
+                }
+                const user: IUser = res.user;
+                resolve(user);
+            });
+        });
     }
 }

@@ -6,6 +6,7 @@ import { Application, Response, Request } from 'express';
 import { UsersRpc } from '../user/user.rpc';
 import { IUser } from '../user/user.interface';
 import * as jwt from 'jsonwebtoken';
+import { ApplicationError } from '../utils/errors/applicationError';
 
 export class AuthenticationHandler {
 
@@ -50,11 +51,11 @@ export class AuthenticationHandler {
         };
 
         try {
-            let user = await UsersRpc.getUserById(userData.id.toLowerCase());
+            const user = await UsersRpc.getUserById(userData.mail);
             if (!user) {
-                user = await UsersRpc.createUser({ ...userData, id: userData.id.toLowerCase() });
+                const err = new ApplicationError('User does not exist in the  User service', 500);
+                done(err);
             }
-
             done(null, user);
         } catch (err) {
             done(err, null);
