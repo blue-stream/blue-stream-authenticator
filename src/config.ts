@@ -3,6 +3,7 @@ export const config = {
         elasticsearch: process.env.LOGGER_ELASTICSEARCH && {
             hosts: process.env.LOGGER_ELASTICSEARCH.split(','),
         },
+        indexPrefix: process.env.LOGGER_ELASTICSEARCH_PREFIX || 'blue-stream-logs',
     },
     server: {
         port: +(process.env.PORT || 3000),
