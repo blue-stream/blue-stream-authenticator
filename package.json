@@ -1,6 +1,6 @@
 {
-  "name": "blue-stream-authenticator",
-  "version": "0.1",
+  "name": "authentication-service",
+  "version": "0.1.0",
   "description": "Suthenticator - Handles authentication and generates user token",
   "main": "index.js",
   "scripts": {
