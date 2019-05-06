@@ -27,7 +27,8 @@ export class AuthenticationHandler {
     static handleUser(req: Request, res: Response) {
         const userToken = jwt.sign(req.user, config.authentication.secret);
 
-        res.cookie('bs-token', userToken);
+        const millisecondsExpires = config.authentication.daysExpires*(1000*60*60*24);
+        res.cookie('bs-token', userToken, { maxAge: millisecondsExpires });
         res.redirect(config.clientEndpoint);
     }
 
