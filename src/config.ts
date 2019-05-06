@@ -24,6 +24,7 @@ export const config = {
     authentication: {
         required: true,
         secret: process.env.SECRET_KEY || 'bLue5tream@2018', // Don't use static value in production! remove from source control!
+        daysExpires: +(process.env.TOKEN_DAYS_EXPIRES || 30),
         saml: {
             entryPoint: process.env.SAML_ENTRY_POINT || 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
             issuer: process.env.SAML_ISSUER || 'http://localhost:3000/metadata.xml',
