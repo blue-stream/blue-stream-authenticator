@@ -1,1 +1,1 @@
-BlueStreamPipeline()
+Pipeline()
