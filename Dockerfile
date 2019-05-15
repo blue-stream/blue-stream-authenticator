@@ -9,9 +9,10 @@ RUN npm run build
 
 FROM node:10.15-alpine
 ENV NODE_ENV=production
+ENV HOME=/usr/src/app
 EXPOSE 8080
 WORKDIR /usr/src/app
-COPY --from=0 ./package.json ./package-lock.json ./
-COPY --from=0 ./dist ./dist/
+COPY --from=0 $HOME/package.json /$HOME/package-lock.json ./
+COPY --from=0 $HOME/dist ./dist/
 RUN npm install
 CMD ["npm", "start"]
