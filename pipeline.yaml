@@ -1,6 +1,6 @@
-repoName: blue-stream/blue-stream-authenticator
+repoName: meateam/authenticator
 runTests: true
-testCommand: npm test
+testCommand: "npm test"
 deployUponTestSuccess: true
 deployCommand:
-deployEnvironment: staging
+deployEnvironment:
