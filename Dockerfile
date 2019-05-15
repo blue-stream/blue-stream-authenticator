@@ -4,7 +4,7 @@ ENV HOME=/usr/src/app
 EXPOSE 8080
 COPY package*.json $HOME/
 WORKDIR $HOME
-RUN npm install --progress=false
+RUN npm install
 COPY . $HOME/
 RUN npm run build
 
