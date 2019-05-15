@@ -14,7 +14,7 @@ const packageDefinition = protoLoader.loadSync(
         oneofs: true,
     });
 const users_proto = grpc.loadPackageDefinition(packageDefinition).users;
-const client = new users_proto.Users('users-service:50051',
+const client = new users_proto.Users('user-service:50051',
                                      grpc.credentials.createInsecure());
 export class UsersRpc {
 

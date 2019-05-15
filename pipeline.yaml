@@ -1,6 +1,6 @@
 repoName: blue-stream/blue-stream-authenticator
 runTests: true
-testCommand:
+testCommand: npm test
 deployUponTestSuccess: true
 deployCommand:
 deployEnvironment: staging
