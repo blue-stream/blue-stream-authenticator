@@ -1,11 +1,10 @@
 FROM node:10.15-alpine
 ENV NODE_ENV=development
-ENV HOME=/usr/src/app
 EXPOSE 8080
-COPY package*.json $HOME/
-WORKDIR $HOME
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN npm install
-COPY . $HOME/
+COPY . ./
 RUN npm run build
 
 FROM node:10.15-alpine
