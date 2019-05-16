@@ -1,10 +1,11 @@
 {
   "name": "authentication-service",
   "version": "0.1.0",
-  "description": "Suthenticator - Handles authentication and generates user token",
+  "description": "Authenticator - Handles authentication and generates user token",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist/index.js",
+    "start": "node ./dist/index.js",
+    "build": "tsc",
     "test": "cross-env NODE_ENV=test mocha --recursive -r ts-node/register src/**/*.spec.ts --exit",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "release": "standard-version"

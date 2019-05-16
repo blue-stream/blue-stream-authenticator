@@ -1,21 +1,17 @@
-FROM node:latest
+FROM node:10.15-alpine
+ENV NODE_ENV=development
+EXPOSE 8080
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . ./
+RUN npm run build
 
-ENV HOME=/home/blue-stream
-
-COPY package*.json $HOME/app/
-
-# RUN chown -R node $HOME/* /usr/local/
-
-WORKDIR $HOME/app
-
-RUN npm install --silent --progress=false
-
-COPY . $HOME/app/
-
-# RUN chown -R node $HOME/*
-
-EXPOSE 3000
-
-# USER node
-
+FROM node:10.15-alpine
+ENV NODE_ENV=production
+EXPOSE 8080
+WORKDIR /usr/src/app
+COPY --from=0 /usr/src/app/package.json /usr/src/app/package-lock.json ./
+COPY --from=0 /usr/src/app/dist ./dist/
+RUN npm install
 CMD ["npm", "start"]

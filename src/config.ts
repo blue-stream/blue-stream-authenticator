@@ -10,7 +10,7 @@ export const config = {
         persistent: false,
     },
     server: {
-        port: +(process.env.PORT || 3000),
+        port: +(process.env.PORT || 8080),
         name: 'authentication',
     },
     cors: {
@@ -26,7 +26,8 @@ export const config = {
     },
     authentication: {
         required: true,
-        secret: process.env.SECRET_KEY || 'pandora@drive', // Don't use static value in production! remove from source control!
+        token: process.env.TOKEN || 'kd-token',
+        secret: process.env.SECRET_KEY || 'pandora@drive', // TODO: Don't use static value in production! remove from source control!
         saml: {
             entryPoint: process.env.SAML_ENTRY_POINT || 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
             issuer: process.env.SAML_ISSUER || 'http://localhost:3000/metadata.xml',

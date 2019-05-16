@@ -27,7 +27,7 @@ export class AuthenticationHandler {
     static handleUser(req: Request, res: Response) {
         const userToken = jwt.sign(req.user, config.authentication.secret);
 
-        res.cookie('kd-token', userToken);
+        res.cookie(config.authentication.token, userToken);
         res.redirect(config.clientEndpoint);
     }
 
