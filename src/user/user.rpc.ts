@@ -2,7 +2,7 @@ import { IUser } from './user.interface';
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 
-const PROTO_PATH = `${__dirname}/../../protos/users.proto`;
+const PROTO_PATH = `${__dirname}/../../proto/users.proto`;
 
 const packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
