@@ -4,9 +4,9 @@
   "description": "Authenticator - Handles authentication and generates user token",
   "main": "index.js",
   "scripts": {
-    "build": "build-ts && copy-static-files",
-    "build-ts": "tsc",
-    "copy-static-files": "cp src/authentication/metadata.xml dist/authentication/metadata.xml",
+    "build": "build:tsc && build:assets",
+    "build:tsc": "tsc",
+    "build:assets": "cp src/authentication/metadata.xml dist/authentication/metadata.xml",
     "dev": "ts-node ./src/index.ts",
     "start": "node ./dist/index.js",
     "test": "cross-env NODE_ENV=test mocha --recursive -r ts-node/register src/**/*.spec.ts --exit",
