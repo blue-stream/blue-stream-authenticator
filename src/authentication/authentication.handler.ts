@@ -7,6 +7,7 @@ import { UsersRpc } from '../user/user.rpc';
 import { IUser } from '../user/user.interface';
 import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
+import { readFile } from 'fs';
 
 export class AuthenticationHandler {
 
@@ -27,7 +28,8 @@ export class AuthenticationHandler {
     static handleUser(req: Request, res: Response) {
         const userToken = jwt.sign(req.user, config.authentication.secret);
 
-        res.cookie(config.authentication.token, userToken);
+        const millisecondsExpires = config.authentication.daysExpires*(1000*60*60*24);
+        res.cookie(config.authentication.token, userToken, { maxAge: millisecondsExpires });
         res.redirect(config.clientEndpoint);
     }
 
@@ -39,7 +41,14 @@ export class AuthenticationHandler {
     }
 
     static sendMetadata(req: Request, res: Response) {
-        res.sendFile(path.resolve(`${__dirname}/../../assets/metadata.xml`));
+        readFile(path.resolve(`${__dirname}/metadata.xml`), 'utf8', (err, data) => {
+            if (err) return res.sendStatus(404);
+
+            const modifiedData = data.replace(/ENDPOINT/g, config.server.endpoint);
+
+            res.set('Content-Type', 'text/xml');
+            return res.send(modifiedData);
+        });
     }
 
     static async verifyUser(profile: any, done: any) {
