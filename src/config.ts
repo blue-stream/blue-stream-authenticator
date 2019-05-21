@@ -1,10 +1,4 @@
 export const config = {
-    logger: {
-        elasticsearch: process.env.LOGGER_ELASTICSEARCH && {
-            hosts: process.env.LOGGER_ELASTICSEARCH.split(','),
-        },
-        indexPrefix: process.env.LOGGER_ELASTICSEARCH_PREFIX || 'blue-stream-logs',
-    },
     server: {
         port: +(process.env.PORT || 8080),
         name: 'authentication',
@@ -41,10 +35,6 @@ export const config = {
             lastName: process.env.PROFILE_EXTRACTOR_LAST_NAME || 'surName',
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
         },
-    },
-    apm: {
-        server: process.env.APM_SERVER || 'http://apm:8200',
-        isActive: +(process.env.APM_ACTIVE || 1),
     },
     clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost:4200',
 };
