@@ -1,17 +1,8 @@
 export const config = {
-    logger: {
-        durable: false,
-        exchangeType: process.env.RMQ_LOGGER_TYPE || 'topic',
-        exchange: process.env.RMQ_LOGGER_EXCHANGE || 'blue_stream_logs',
-        host: process.env.RMQ_LOGGER_HOST || 'localhost',
-        port: +(process.env.RMQ_LOGGER_PORT || 15672),
-        password: process.env.RMQ_LOGGER_PASS || 'guest',
-        username: process.env.RMQ_LOGGER_USER || 'guest',
-        persistent: false,
-    },
     server: {
         port: +(process.env.PORT || 8080),
         name: 'authentication',
+        endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:3000/auth',
     },
     cors: {
         allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:4200'],
@@ -28,6 +19,7 @@ export const config = {
         required: true,
         token: process.env.TOKEN || 'kd-token',
         secret: process.env.SECRET_KEY || 'pandora@drive', // TODO: Don't use static value in production! remove from source control!
+        daysExpires: +(process.env.TOKEN_DAYS_EXPIRES || 30),
         saml: {
             entryPoint: process.env.SAML_ENTRY_POINT || 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
             issuer: process.env.SAML_ISSUER || 'http://localhost:3000/metadata.xml',
