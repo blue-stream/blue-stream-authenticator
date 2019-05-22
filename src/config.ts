@@ -1,15 +1,14 @@
 export const config = {
     server: {
         port: +(process.env.PORT || 8080),
-        name: 'authentication',
+        name: 'authentication-service',
         endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:3000/auth',
     },
     cors: {
         allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:4200'],
     },
     users: {
-        endpoint: process.env.USERS_RPC_ENDPOINT || 'http://localhost',
-        port: +(process.env.USERS_RPC_PORT || 50051),
+        endpoint: process.env.USERS_RPC_ENDPOINT || 'http://localhost:50051',
         methods: {
             GET_USER_BY_ID: 'getUserById',
             CREATE_USER: 'createUser',

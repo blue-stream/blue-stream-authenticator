@@ -4,7 +4,7 @@
   "description": "Authenticator - Handles authentication and generates user token",
   "main": "index.js",
   "scripts": {
-    "build": "build:tsc && build:assets",
+    "build": "npm run build:tsc && npm run build:assets",
     "build:tsc": "tsc",
     "build:assets": "cp src/authentication/metadata.xml dist/authentication/metadata.xml",
     "dev": "ts-node ./src/index.ts",

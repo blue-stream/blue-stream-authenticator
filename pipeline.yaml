@@ -1,4 +1,4 @@
-repoName: meateam/authenticator
+repoName: meateam/authentication-service
 runTests: true
 testCommand: "npm test"
 deployUponTestSuccess: true
