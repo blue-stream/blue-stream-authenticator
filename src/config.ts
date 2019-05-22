@@ -2,10 +2,10 @@ export const config = {
     server: {
         port: +(process.env.PORT || 8080),
         name: 'authentication-service',
-        endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:3000/auth',
+        endpoint: process.env.SERVER_ENDPOINT || 'http://localhost:8080/auth',
     },
     cors: {
-        allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:4200'],
+        allowedOrigins: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost/'],
     },
     users: {
         endpoint: process.env.USERS_RPC_ENDPOINT || 'http://localhost:50051',
@@ -35,5 +35,5 @@ export const config = {
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
         },
     },
-    clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost:4200',
+    clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost/',
 };
