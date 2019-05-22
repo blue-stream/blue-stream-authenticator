@@ -21,8 +21,8 @@ export const config = {
         daysExpires: +(process.env.TOKEN_DAYS_EXPIRES || 30),
         saml: {
             entryPoint: process.env.SAML_ENTRY_POINT || 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
-            issuer: process.env.SAML_ISSUER || 'http://localhost:3000/metadata.xml',
-            callbackUrl: process.env.SAML_CALLBACK_URL || 'http://localhost:3000/metadata.xml/callback',
+            issuer: process.env.SAML_ISSUER || 'http://localhost:8080/auth/metadata.xml',
+            callbackUrl: process.env.SAML_CALLBACK_URL || 'http://localhost:8080/auth/metadata.xml/callback',
             authnContext: 'http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows',
             identifierFormat: undefined,
             signatureAlgorithm: 'sha1',
