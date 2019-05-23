@@ -14,6 +14,5 @@ WORKDIR /usr/src/app
 COPY --from=0 /usr/src/app/package.json /usr/src/app/package-lock.json ./
 COPY --from=0 /usr/src/app/dist ./dist/
 COPY --from=0 /usr/src/app/proto ./proto/
-COPY --from=0 /usr/src/app/assets ./assets/
 RUN npm install
 CMD ["npm", "start"]
