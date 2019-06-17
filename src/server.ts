@@ -21,6 +21,7 @@ export class Server {
         this.configureMiddlewares();
         this.initializeErrorHandler();
         this.initializeAuthenticator();
+        this.initializeOtherRouts();
         this.server = http.createServer(this.app);
         this.server.listen(config.server.port, () => {
             console.log(`Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
@@ -64,5 +65,12 @@ export class Server {
     private initializeAuthenticator() {
         AuthenticationHandler.initialize(this.app);
         this.app.use('/auth/', AuthenticationRouter);
+    }
+
+    private initializeOtherRouts() {
+        this.app.get('/auth/healthcheck', (req: any, res: any) => {
+            // Check Connection to authentication provider (shraga)
+            res.status(200);
+        });
     }
 }
