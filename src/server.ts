@@ -55,9 +55,6 @@ export class Server {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
-        this.app.use(express.urlencoded({
-            extended: false,
-        }));
         this.app.use(cookieParser());
     }
 

@@ -9,7 +9,7 @@ import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
 import { readFile } from 'fs';
 
-const { Strategy } = require('passport-shraga');
+const ShragaStrategy = require('passport-shraga').Strategy;
 
 export class AuthenticationHandler {
     static initialize(app: Application) {
@@ -33,8 +33,9 @@ export class AuthenticationHandler {
     }
 
     static handleUser(req: Request, res: Response) {
+        const expiresIn = 60 * 60 * 24 * config.authentication.daysExpires;
         const user: Object = Object.assign(
-            { exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * config.authentication.daysExpires) },
+            { exp: Math.floor(Date.now() / 1000) + expiresIn },
             req.user,
         );
         const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
@@ -116,7 +117,7 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
     }
 
     protected static configurePassport() {
-        passport.use(new Strategy({}, (profile: any, done: any) => {
+        passport.use(new ShragaStrategy({}, (profile: any, done: any) => {
             done(null, profile);
         }));
     }
