@@ -30,14 +30,14 @@ export class AuthenticationHandler {
     }
 
     protected static configurePassport() {
-        console.log('Configuring no strategy');
     }
 
     static handleUser(req: Request, res: Response) {
-        const userToken = jwt.sign({
-            data: req.user,
-            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * config.authentication.daysExpires),
-        },                         config.authentication.secret);
+        const user: Object = Object.assign(
+            { exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * config.authentication.daysExpires) },
+            req.user,
+        );
+        const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
 
         res.cookie(config.authentication.token, userToken);
         res.redirect(config.clientEndpoint);
@@ -98,7 +98,6 @@ export class SamlAuthenticationHandler extends AuthenticationHandler {
     }
 
     protected static configurePassport() {
-        console.log('Configuring the saml strategy');
         passport.use(new SAMLStrategy(
             config.authentication.saml as SamlConfig,
             SamlAuthenticationHandler.verifyUser,
@@ -117,9 +116,7 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
     }
 
     protected static configurePassport() {
-        console.log('Configuring the shraga strategy');
         passport.use(new Strategy({}, (profile: any, done: any) => {
-            console.log(`Profile ${profile} logged in`);
             done(null, profile);
         }));
     }
