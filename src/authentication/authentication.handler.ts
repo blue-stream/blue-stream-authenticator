@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as passport from 'passport';
-import { SamlConfig, Strategy } from 'passport-saml';
+import { SamlConfig, Strategy as SAMLStrategy } from 'passport-saml';
 import { config } from '../config';
 import { Application, Response, Request } from 'express';
 import { UsersRpc } from '../user/user.rpc';
@@ -9,29 +9,42 @@ import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
 import { readFile } from 'fs';
 
-export class AuthenticationHandler {
+const { Strategy } = require('passport-shraga');
 
+export class AuthenticationHandler {
     static initialize(app: Application) {
         app.use(passport.initialize());
+        app.use(passport.session());
 
-        passport.serializeUser(AuthenticationHandler.serialize);
-        passport.deserializeUser(AuthenticationHandler.deserialize);
+        passport.serializeUser(this.serialize);
+        passport.deserializeUser(this.deserialize);
 
-        passport.use(new Strategy(
-            config.authentication.saml as SamlConfig,
-            AuthenticationHandler.verifyUser,
-        ));
-
+        this.configurePassport();
         return passport.initialize();
     }
 
-    static handleUser(req: Request, res: Response) {
-        const userToken = jwt.sign(req.user, config.authentication.secret);
+    protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
+    }
 
-        const millisecondsExpires = config.authentication.daysExpires*(1000*60*60*24);
-        res.cookie(config.authentication.token, userToken, { maxAge: millisecondsExpires });
+    protected static async deserialize(id: string, done: (err?: Error, user?: any) => void) {
+    }
+
+    protected static configurePassport() {
+        console.log('Configuring no strategy');
+    }
+
+    static handleUser(req: Request, res: Response) {
+        const userToken = jwt.sign({
+            data: req.user,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * config.authentication.daysExpires),
+        },                         config.authentication.secret);
+
+        res.cookie(config.authentication.token, userToken);
         res.redirect(config.clientEndpoint);
     }
+}
+
+export class SamlAuthenticationHandler extends AuthenticationHandler {
 
     static authenticate() {
         return passport.authenticate('saml', {
@@ -71,16 +84,47 @@ export class AuthenticationHandler {
         }
     }
 
-    private static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
+    protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
         done(undefined, user.id);
     }
 
-    private static async deserialize(id: string, done: (err?: Error, user?: any) => void) {
+    protected static async deserialize(id: string, done: (err?: Error, user?: any) => void) {
         try {
             const user = await UsersRpc.getUserById(id.toLowerCase());
             done(undefined, user);
         } catch (err) {
             done(err, null);
         }
+    }
+
+    protected static configurePassport() {
+        console.log('Configuring the saml strategy');
+        passport.use(new SAMLStrategy(
+            config.authentication.saml as SamlConfig,
+            SamlAuthenticationHandler.verifyUser,
+        ));
+    }
+}
+
+export class ShragaAuthenticationHandler extends AuthenticationHandler {
+
+    protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
+        done(undefined, user.id);
+    }
+
+    protected static async deserialize(id: string, done: (err?: Error, id?: any) => void) {
+        done(undefined, id);
+    }
+
+    protected static configurePassport() {
+        console.log('Configuring the shraga strategy');
+        passport.use(new Strategy({}, (profile: any, done: any) => {
+            console.log(`Profile ${profile} logged in`);
+            done(null, profile);
+        }));
+    }
+
+    static authenticate() {
+        return passport.authenticate('shraga', this.handleUser);
     }
 }

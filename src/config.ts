@@ -34,6 +34,7 @@ export const config = {
             lastName: process.env.PROFILE_EXTRACTOR_LAST_NAME || 'surName',
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
         },
+        strategy: process.env.STRATEGY || 'shraga',
     },
     clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost/',
 };

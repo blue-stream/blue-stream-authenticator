@@ -3,11 +3,13 @@ import * as http from 'http';
 import * as bodyParser from 'body-parser';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
+import * as session from 'express-session';
+import * as cookieParser from 'cookie-parser';
 import { config } from './config';
 import { userErrorHandler, serverErrorHandler, unknownErrorHandler } from './utils/errors/errorHandler';
-import { AuthenticationHandler } from './authentication/authentication.handler';
-import { AuthenticationRouter } from './authentication/authentication.router';
-
+import { SamlAuthenticationHandler, ShragaAuthenticationHandler } from './authentication/authentication.handler';
+import { SamlAuthenticationRouter } from './authentication/routers/saml.authentication.router';
+import { ShragaAuthenticationRouter } from './authentication/routers/shraga.authentication.router';
 export class Server {
     public app: express.Application;
     private server: http.Server;
@@ -53,6 +55,10 @@ export class Server {
 
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(express.urlencoded({
+            extended: false,
+        }));
+        this.app.use(cookieParser());
     }
 
     private initializeErrorHandler() {
@@ -62,7 +68,26 @@ export class Server {
     }
 
     private initializeAuthenticator() {
-        AuthenticationHandler.initialize(this.app);
-        this.app.use('/auth/', AuthenticationRouter);
+        if (config.authentication.strategy === 'shraga') {
+            this.initializeShragaAuthenticator();
+        } else this.initializeSamlAuthenticator();
+
+    }
+
+    private initializeSamlAuthenticator() {
+        SamlAuthenticationHandler.initialize(this.app);
+        this.app.use('/auth/', SamlAuthenticationRouter);
+    }
+
+    private initializeShragaAuthenticator() {
+
+        this.app.use(session({
+            secret: 'keyboard cat',
+            resave: false,
+            saveUninitialized: true,
+        }));
+
+        ShragaAuthenticationHandler.initialize(this.app);
+        this.app.use('/auth/', ShragaAuthenticationRouter);
     }
 }
