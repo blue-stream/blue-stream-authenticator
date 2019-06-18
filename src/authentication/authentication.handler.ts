@@ -33,8 +33,10 @@ export class AuthenticationHandler {
     }
 
     static handleUser(req: Request, res: Response) {
-        const dayInSeconds = 86400;
-        const expiresIn = dayInSeconds * config.authentication.daysExpires;
+        const minute = 60;
+        const hour = 60 * minute;
+        const day = 24 * hour;
+        const expiresIn = day * config.authentication.daysExpires;
         const user: Object = Object.assign(
             { exp: Math.floor(Date.now() / 1000) + expiresIn },
             req.user,
