@@ -35,6 +35,7 @@ export const config = {
 			mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
 		},
 		strategy: process.env.STRATEGY || 'shraga',
+		shragaURL: process.env.SHRAGA_URL || 'localhost:3000',
 	},
 	clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost/',
 };
