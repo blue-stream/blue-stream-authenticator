@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as passport from 'passport';
-import { SamlConfig, Strategy } from 'passport-saml';
+import { SamlConfig, Strategy as SAMLStrategy } from 'passport-saml';
 import { config } from '../config';
 import { Application, Response, Request } from 'express';
 import { UsersRpc } from '../user/user.rpc';
@@ -9,78 +9,118 @@ import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
 import { readFile } from 'fs';
 
+const ShragaStrategy = require('passport-shraga').Strategy;
+
 export class AuthenticationHandler {
+	static initialize(app: Application) {
+		app.use(passport.initialize());
+		app.use(passport.session());
 
-    static initialize(app: Application) {
-        app.use(passport.initialize());
+		passport.serializeUser(this.serialize);
+		passport.deserializeUser(this.deserialize);
 
-        passport.serializeUser(AuthenticationHandler.serialize);
-        passport.deserializeUser(AuthenticationHandler.deserialize);
+		this.configurePassport();
+		return passport.initialize();
+	}
 
-        passport.use(new Strategy(
-            config.authentication.saml as SamlConfig,
-            AuthenticationHandler.verifyUser,
-        ));
+	protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) { }
 
-        return passport.initialize();
-    }
+	protected static deserialize(id: string, done: (err?: Error, user?: any) => void) { }
 
-    static handleUser(req: Request, res: Response) {
-        const userToken = jwt.sign(req.user, config.authentication.secret);
+	protected static configurePassport() { }
 
-        const millisecondsExpires = config.authentication.daysExpires*(1000*60*60*24);
-        res.cookie(config.authentication.token, userToken, { maxAge: millisecondsExpires });
-        res.redirect(config.clientEndpoint);
-    }
+	static handleUser(req: Request, res: Response) {
+		const minute = 60;
+		const hour = 60 * minute;
+		const day = 24 * hour;
+		const expiresIn = day * config.authentication.daysExpires;
 
-    static authenticate() {
-        return passport.authenticate('saml', {
-            failureRedirect: '/failed',
-            failureFlash: true,
-        });
-    }
+		const user: Object = { exp: Math.floor(Date.now() / 1000) + expiresIn, ...req.user };
+		const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
 
-    static sendMetadata(req: Request, res: Response) {
-        readFile(path.resolve(`${__dirname}/metadata.xml`), 'utf8', (err, data) => {
-            if (err) return res.sendStatus(404);
+		res.cookie(config.authentication.token, userToken);
+		res.redirect(config.clientEndpoint);
+	}
+}
 
-            const modifiedData = data.replace(/ENDPOINT/g, config.server.endpoint);
+export class SamlAuthenticationHandler extends AuthenticationHandler {
+	static authenticate() {
+		return passport.authenticate('saml', {
+			failureRedirect: '/failed',
+			failureFlash: true,
+		});
+	}
 
-            res.set('Content-Type', 'text/xml');
-            return res.send(modifiedData);
-        });
-    }
+	static sendMetadata(req: Request, res: Response) {
+		readFile(path.resolve(`${__dirname}/metadata.xml`), 'utf8', (err, data) => {
+			if (err) return res.sendStatus(404);
 
-    static async verifyUser(profile: any, done: any) {
-        const userData: IUser = {
-            id: profile[config.authentication.profileExtractor.id],
-            firstName: profile[config.authentication.profileExtractor.firstName],
-            lastName: profile[config.authentication.profileExtractor.lastName],
-            mail: profile[config.authentication.profileExtractor.mail],
-        };
+			const modifiedData = data.replace(/ENDPOINT/g, config.server.endpoint);
 
-        try {
-            const user = await UsersRpc.getUserById(userData.mail);
-            if (!user) {
-                const err = new ApplicationError('User does not exist in the  User service', 500);
-                done(err);
-            }
-            done(null, user);
-        } catch (err) {
-            done(err, null);
-        }
-    }
+			res.set('Content-Type', 'text/xml');
+			return res.send(modifiedData);
+		});
+	}
 
-    private static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
-        done(undefined, user.id);
-    }
+	static async verifyUser(profile: any, done: any) {
+		const userData: IUser = {
+			id: profile[config.authentication.profileExtractor.id],
+			firstName: profile[config.authentication.profileExtractor.firstName],
+			lastName: profile[config.authentication.profileExtractor.lastName],
+			mail: profile[config.authentication.profileExtractor.mail],
+		};
 
-    private static async deserialize(id: string, done: (err?: Error, user?: any) => void) {
-        try {
-            const user = await UsersRpc.getUserById(id.toLowerCase());
-            done(undefined, user);
-        } catch (err) {
-            done(err, null);
-        }
-    }
+		try {
+			const user = await UsersRpc.getUserById(userData.mail);
+			if (!user) {
+				const err = new ApplicationError('User does not exist in the  User service', 500);
+				done(err);
+			}
+
+			done(null, user);
+		} catch (err) {
+			done(err, null);
+		}
+	}
+
+	protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
+		done(undefined, user.id);
+	}
+
+	protected static async deserialize(id: string, done: (err?: Error, user?: any) => void) {
+		try {
+			const user = await UsersRpc.getUserById(id.toLowerCase());
+			done(undefined, user);
+		} catch (err) {
+			done(err, null);
+		}
+	}
+
+	protected static configurePassport() {
+		passport.use(new SAMLStrategy(
+			config.authentication.saml as SamlConfig,
+			SamlAuthenticationHandler.verifyUser,
+		));
+	}
+}
+
+export class ShragaAuthenticationHandler extends AuthenticationHandler {
+
+	protected static serialize(user: { id: string }, done: (err?: Error, id?: string) => void) {
+		done(undefined, user.id);
+	}
+
+	protected static async deserialize(id: string, done: (err?: Error, id?: any) => void) {
+		done(undefined, id);
+	}
+
+	protected static configurePassport() {
+		passport.use(new ShragaStrategy({}, (profile: any, done: any) => {
+			done(null, profile);
+		}));
+	}
+
+	static authenticate() {
+		return passport.authenticate('shraga', this.handleUser);
+	}
 }
