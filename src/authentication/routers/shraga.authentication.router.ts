@@ -5,7 +5,6 @@ const passport = require('passport');
 const ShragaAuthenticationRouter = Router();
 
 ShragaAuthenticationRouter.get('/login', AuthenticationHandler.authenticate());
-
 ShragaAuthenticationRouter.post('/callback', passport.authenticate('shraga'), AuthenticationHandler.handleUser);
 
 export { ShragaAuthenticationRouter };
