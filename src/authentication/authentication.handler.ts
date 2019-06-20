@@ -8,6 +8,7 @@ import { IUser } from '../user/user.interface';
 import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
 import { readFile } from 'fs';
+import { NextFunction } from 'connect';
 
 const ShragaStrategy = require('passport-shraga').Strategy;
 
@@ -29,17 +30,24 @@ export class AuthenticationHandler {
 
 	protected static configurePassport() { }
 
-	static handleUser(req: Request, res: Response) {
+	static handleUser(req: Request, res: Response, next: NextFunction) {
+		console.log('In handleUser:');
+		console.log('req.user:');
+		console.log(req.user);
 		const minute = 60;
 		const hour = 60 * minute;
 		const day = 24 * hour;
 		const expiresIn = day * config.authentication.daysExpires;
-
+		console.log(`expiresIn: ${expiresIn}`);
 		const user: Object = { exp: Math.floor(Date.now() / 1000) + expiresIn, ...req.user };
 		const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
-
+		console.log('userToken: ');
+		console.log(userToken);
+		console.log(`redirecting to1: ${config.clientEndpoint}`);
 		res.cookie(config.authentication.token, userToken);
 		res.redirect(config.clientEndpoint);
+		console.log(`redirecting to2: ${config.clientEndpoint}`);
+		next();
 	}
 }
 
