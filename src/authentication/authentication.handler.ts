@@ -30,7 +30,7 @@ export class AuthenticationHandler {
 
 	protected static configurePassport() { }
 
-	static handleUser(req: Request, res: Response, next: NextFunction) {
+	static handleUser(req: Request, res: Response) {
 		console.log('In handleUser:');
 		console.log('req.user:');
 		console.log(req.user);
@@ -47,7 +47,6 @@ export class AuthenticationHandler {
 		res.cookie(config.authentication.token, userToken);
 		res.redirect(config.clientEndpoint);
 		console.log(`redirecting to2: ${config.clientEndpoint}`);
-		next();
 	}
 }
 
