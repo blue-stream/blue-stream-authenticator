@@ -94,7 +94,7 @@ export class Server {
 	private initializeOtherRoutes() {
 		this.app.get('/auth/healthcheck', (_: any, res: any) => {
 				// Check Connection to authentication provider (shraga)
-				res.status(200);
+				res.status(200).send('OK');
 		});
 }
 }

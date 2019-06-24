@@ -35,7 +35,14 @@ export class AuthenticationHandler {
 		const day = 24 * hour;
 		const expiresIn = day * config.authentication.daysExpires;
 
-		const user: Object = { exp: Math.floor(Date.now() / 1000) + expiresIn, ...req.user };
+		const user: IUser = { exp: Math.floor(Date.now() / 1000) + expiresIn, ...req.user };
+
+		// handle Shraga username inside. TODO: fix this more properly later
+		if (user.name) {
+			user.firstName = user.name.firstName;
+			user.lastName = user.name.lastName;
+		}
+
 		const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
 
 		res.cookie(config.authentication.token, userToken);
@@ -115,7 +122,7 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
 	}
 
 	protected static configurePassport() {
-		passport.use(new ShragaStrategy({ config: config.authentication.shragaURL }, (profile: any, done: any) => {
+		passport.use(new ShragaStrategy({ shragaURL: config.authentication.shragaURL }, (profile: any, done: any) => {
 			done(null, profile);
 		}));
 	}
