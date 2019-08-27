@@ -11,7 +11,9 @@
     "start": "node ./dist/index.js",
     "test": "cross-env NODE_ENV=test mocha --recursive -r ts-node/register src/**/*.spec.ts --exit",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "release": "standard-version"
+    "release": "standard-version",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Ron Borysovski & Yonatan Tal",
   "license": "ISC",
@@ -51,6 +53,8 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-saml": "^1.1.0",
-    "passport-shraga": "^1.0.0"
-  }
+    "passport-shraga": "^1.0.0",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
