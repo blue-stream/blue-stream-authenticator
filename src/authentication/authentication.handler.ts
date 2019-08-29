@@ -35,7 +35,7 @@ export class AuthenticationHandler {
 		const day = 24 * hour;
 		const expiresIn = day * config.authentication.daysExpires;
 
-		const user: IUser = { exp: Math.floor(Date.now() / 1000) + expiresIn, ...req.user };
+		const user: IUser = { ...req.user, exp: Math.floor(Date.now() / 1000) + expiresIn};
 
 		// handle Shraga username inside. TODO: fix this more properly later
 		if (user.name) {
