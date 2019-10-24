@@ -72,18 +72,17 @@ export class SamlAuthenticationHandler extends AuthenticationHandler {
 	static async verifyUser(profile: any, done: any) {
 		const userData: IUser = {
 			id: profile[config.authentication.profileExtractor.id],
+			mail: profile[config.authentication.profileExtractor.mail],
 			firstName: profile[config.authentication.profileExtractor.firstName],
 			lastName: profile[config.authentication.profileExtractor.lastName],
-			mail: profile[config.authentication.profileExtractor.mail],
 		};
 
 		try {
-			const user = await UsersRpc.getUserById(userData.mail);
+			const user = await UsersRpc.getUserById(userData.id);
 			if (!user) {
 				const err = new ApplicationError('User does not exist in the  User service', 500);
 				done(err);
 			}
-
 			done(null, user);
 		} catch (err) {
 			done(err, null);

@@ -3,7 +3,10 @@ export interface IUser {
 	name?: Name;
 	firstName: string;
 	lastName: string;
+	fullName?: string;
 	mail: string;
+	hierarchy?: string[];
+	hierarchyFlat?: string;
 }
 
 interface Name {
