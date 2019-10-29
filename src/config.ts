@@ -30,9 +30,9 @@ export const config = {
 		},
 		profileExtractor: {
 			id: process.env.PROFILE_EXTRACTOR_ID || 'id',
+			mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
 			firstName: process.env.PROFILE_EXTRACTOR_FIRST_NAME || 'givenName',
 			lastName: process.env.PROFILE_EXTRACTOR_LAST_NAME || 'surName',
-			mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
 		},
 		strategy: process.env.STRATEGY || 'shraga',
 		shragaURL: process.env.SHRAGA_URL || 'http://localhost:3000',
