@@ -121,7 +121,10 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
     }
 
     protected static configurePassport() {
-        passport.use(new ShragaStrategy({ shragaURL: config.authentication.shragaURL }, (profile: any, done: any) => {
+        const shragaURL = config.authentication.shragaURL;
+        const useEnrichId = config.authentication.useEnrichId;
+        const allowedProviders = [config.authentication.allowedProvider];
+        passport.use(new ShragaStrategy({ shragaURL, useEnrichId, allowedProviders }, (profile: any, done: any) => {
             done(null, profile);
         }));
     }
