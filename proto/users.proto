@@ -5,6 +5,7 @@ package users;
 service Users {
     rpc GetUserByMail(GetByMailRequest) returns (GetUserResponse) {}
     rpc GetUserByID(GetByIDRequest) returns (GetUserResponse) {}
+    rpc FindUserByName(FindUserByNameRequest) returns (FindUserByNameResponse) {}
 }
 
 message GetByMailRequest {
@@ -17,11 +18,22 @@ message GetByIDRequest {
 
 message User {
     string id = 1;
-    string firstName = 2;
-    string lastName = 3;
-    string mail = 4;
+    string mail = 2;
+    string firstName = 3;
+    string lastName = 4;
+    string fullName = 5;
+    repeated string hierarchy = 6;
+    string hierarchyFlat = 7;
 }
 
 message GetUserResponse {
     User user = 1;
+}
+
+message FindUserByNameRequest {
+    string name = 1;
+}
+
+message FindUserByNameResponse {
+    repeated User users = 1;
 }
