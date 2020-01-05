@@ -46,10 +46,11 @@ export class AuthenticationHandler {
             user.lastName = user.name.lastName;
         }
 
+        const constRedirectURI = req.user.RelayState || config.clientEndpoint;
         const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
 
         res.cookie(config.authentication.token, userToken);
-        res.redirect(config.clientEndpoint);
+        res.redirect(constRedirectURI);
     }
 }
 
