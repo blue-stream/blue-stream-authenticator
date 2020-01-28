@@ -54,7 +54,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-saml": "^1.1.0",
-    "passport-shraga": "^1.3.0",
+    "passport-shraga": "^1.4.0",
     "snyk": "^1.258.2"
   },
   "snyk": true

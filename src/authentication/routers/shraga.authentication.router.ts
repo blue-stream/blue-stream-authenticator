@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ShragaAuthenticationHandler as AuthenticationHandler } from '../authentication.handler';
-const passport = require('passport');
+import * as passport from 'passport';
 
 const ShragaAuthenticationRouter = Router();
 
