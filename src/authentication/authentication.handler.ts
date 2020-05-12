@@ -43,7 +43,7 @@ export class AuthenticationHandler {
         // handle Shraga username inside. TODO: fix this more properly later
         if (user.name) {
             user.firstName = user.name.firstName;
-            user.lastName = user.name.lastName;
+            user.lastName = user.name.lastName || "";
         }
 
         const constRedirectURI = req.user.RelayState || config.clientEndpoint;
