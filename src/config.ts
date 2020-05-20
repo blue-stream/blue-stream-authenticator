@@ -41,4 +41,5 @@ export const config = {
         unauthorized: './401/index.html',
     },
     clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost/',
+    support: process.env.UNAUTHORIZED_SUPPORT_URL || 'https://open.rocket.chat',
 };

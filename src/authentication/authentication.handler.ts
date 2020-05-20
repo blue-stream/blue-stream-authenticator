@@ -140,4 +140,8 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
     static sendUnauthorized(req: Request, res: Response) {
         res.sendFile(path.resolve(config.authentication.unauthorized));
     }
+
+    static getSupportURL(req: Request, res: Response) {
+        res.json(config.support);
+    }
 }

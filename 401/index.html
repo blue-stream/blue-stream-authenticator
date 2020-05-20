@@ -204,19 +204,18 @@
       <a id="support">פנייה לשירות לקוחות</a>
     </div>
     <script>
-      const baseURL = "";
       const a = document.getElementById("support");
 
       async function fetchSupportLink() {
-        await fetch(`${baseURL}/api/config`).then(async (data) => {
-          const config = await data.json();
-          a.setAttribute("href", config.supportLink);
-        });
-        // .catch((err) => {
-        //   a.style.display = "none";
-        // });
+        await fetch(`/auth/support`)
+          .then(async (data) => {
+            const supportLink = await data.json();
+            a.setAttribute("href", supportLink);
+          })
+          .catch((err) => {
+            a.style.display = "none";
+          });
       }
-
       fetchSupportLink();
     </script>
   </body>
