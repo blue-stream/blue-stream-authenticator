@@ -136,4 +136,8 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
     static authenticate() {
         return passport.authenticate('shraga', this.handleUser);
     }
+
+    static sendUnauthorized(req: Request, res: Response) {
+        res.sendFile(path.resolve(config.authentication.unauthorized));
+    }
 }

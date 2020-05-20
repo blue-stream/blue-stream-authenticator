@@ -38,6 +38,7 @@ export const config = {
         shragaURL: process.env.SHRAGA_URL || 'http://localhost:3000',
         useEnrichId: process.env.SHRAGA_USE_ENRICH_ID || true,
         allowedProvider: process.env.SHRAGA_PROVIDERS || 'Genesis',
+        unauthorized: './401/index.html',
     },
     clientEndpoint: process.env.CLIENT_ENDPOINT || 'http://localhost/',
 };
