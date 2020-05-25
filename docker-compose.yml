@@ -1,0 +1,22 @@
+version: '2.1'
+services:
+  authentication-service:
+    build: .
+    image: authentication-service:latest
+    ports:
+      - '8084:8080'
+    environment:
+      PORT: 8080
+      SERVER_ENDPOINT: 'http://localhost:8080/auth'
+      ALLOWED_ORIGINS: 'http://localhost/'
+      USERS_RPC_ENDPOINT: 'http://localhost:50051'
+      SECRET_KEY: 'pandora@drive'
+      TOKEN_DAYS_EXPIRES: 30
+      SAML_ENTRY_POINT: 'http://localhost:8085/simplesaml/saml2/idp/SSOService.php'
+      SAML_ISSUER: 'http://localhost:8084/auth/metadata.xml'
+      SAML_CALLBACK_URL: 'http://localhost:8084/auth/metadata.xml/callback'
+      CLIENT_ENDPOINT: 'http://localhost'
+      SHRAGA_URL: http://shrugshrug
+      STRATEGY: shraga
+      MONGODB_NAME: shraga-proxy
+      UNAUTHORIZED_SUPPORT_URL: 'https://open.rocket.chat'
