@@ -9,6 +9,7 @@
     "build:assets": "cp src/authentication/metadata.xml dist/authentication/metadata.xml",
     "dev": "ts-node ./src/index.ts",
     "start": "node ./dist/index.js",
+    "test:lint": "npm run tslint && npm test",
     "test": "cross-env NODE_ENV=test mocha --recursive -r ts-node/register src/**/*.spec.ts --exit",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "release": "standard-version",
@@ -53,8 +54,8 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-saml": "^1.1.0",
-    "passport-shraga": "^1.0.0",
-    "snyk": "^1.189.0"
+    "passport-shraga": "^1.4.0",
+    "snyk": "^1.258.2"
   },
   "snyk": true
 }
