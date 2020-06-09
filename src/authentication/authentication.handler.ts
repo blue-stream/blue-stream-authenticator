@@ -43,13 +43,14 @@ export class AuthenticationHandler {
         // handle Shraga username inside. TODO: fix this more properly later
         if (user.name) {
             user.firstName = user.name.firstName;
-            user.lastName = user.name.lastName;
+            user.lastName = user.name.lastName || ' ';
         }
 
+        const constRedirectURI = req.user.RelayState || config.clientEndpoint;
         const userToken = jwt.sign(JSON.parse(JSON.stringify(user)), config.authentication.secret);
 
         res.cookie(config.authentication.token, userToken);
-        res.redirect(config.clientEndpoint);
+        res.redirect(constRedirectURI);
     }
 }
 
@@ -134,5 +135,13 @@ export class ShragaAuthenticationHandler extends AuthenticationHandler {
 
     static authenticate() {
         return passport.authenticate('shraga', this.handleUser);
+    }
+
+    static sendUnauthorized(req: Request, res: Response) {
+        res.sendFile(path.resolve(config.authentication.unauthorized));
+    }
+
+    static getSupportURL(req: Request, res: Response) {
+        res.json(config.support);
     }
 }

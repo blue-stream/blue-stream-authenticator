@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as bodyParser from 'body-parser';
+import * as path from 'path';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import * as session from 'express-session';
@@ -25,6 +26,7 @@ export class Server {
         this.initializeErrorHandler();
         this.initializeAuthenticator();
         this.initializeOtherRoutes();
+        this.initializeStaticFolder();
         this.server = http.createServer(this.app);
         this.server.listen(config.server.port, () => {
             console.log(`Server running in ${process.env.NODE_ENV || 'development'} environment on port ${config.server.port}`);
@@ -89,6 +91,10 @@ export class Server {
 
         ShragaAuthenticationHandler.initialize(this.app);
         this.app.use('/auth/', ShragaAuthenticationRouter);
+    }
+
+    private initializeStaticFolder() {
+        this.app.use('/401', express.static(path.resolve('./401')));
     }
 
     private initializeOtherRoutes() {
