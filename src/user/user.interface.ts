@@ -4,12 +4,13 @@ export interface IUser {
     firstName: string;
     lastName: string;
     fullName?: string;
+    job: string;
     mail: string;
     hierarchy?: string[];
     hierarchyFlat?: string;
 }
 
-interface Name {
+export interface Name {
     firstName: string;
     lastName: string;
 }

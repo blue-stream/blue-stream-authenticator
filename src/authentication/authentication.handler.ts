@@ -4,7 +4,7 @@ import { SamlConfig, Strategy as SAMLStrategy } from 'passport-saml';
 import { config } from '../config';
 import { Application, Response, Request } from 'express';
 import { UsersRpc } from '../user/user.rpc';
-import { IUser } from '../user/user.interface';
+import { IUser, Name } from '../user/user.interface';
 import * as jwt from 'jsonwebtoken';
 import { ApplicationError } from '../utils/errors/applicationError';
 import { readFile } from 'fs';
@@ -40,10 +40,14 @@ export class AuthenticationHandler {
 
         const user: IUser = { ...req.user, iat, exp };
 
-        // handle Shraga username inside. TODO: fix this more properly later
-        if (user.name) {
-            user.firstName = user.name.firstName;
-            user.lastName = user.name.lastName || ' ';
+        try {
+            const name = handleUserName(user);
+            user.firstName = name.firstName;
+            user.lastName = name.lastName;
+
+        } catch (err) {
+            console.log(`Error: ${err} \n User: ${user}; name: ${user.name}; id: ${user.id}`);
+            return res.redirect('/auth/unauthorized');
         }
 
         const constRedirectURI = req.user.RelayState || config.clientEndpoint;
@@ -52,6 +56,21 @@ export class AuthenticationHandler {
         res.cookie(config.authentication.token, userToken);
         res.redirect(constRedirectURI);
     }
+}
+
+// handleUserName gets a user and returns the compiled user's firstName+lastName.
+// In case there is no firstName inside the user.name it try to take the user's job instead as his firstName
+export function handleUserName(user: IUser): Name {
+    if (!user.name) {
+        throw new Error('User has no name object');
+    }
+
+    const firstName = user.name.firstName || user.job;
+    if (!firstName) {
+        throw new Error('User has no first-name and no job');
+    }
+    const lastName = user.name.lastName || config.users.defaultLastName;
+    return { firstName, lastName };
 }
 
 export class SamlAuthenticationHandler extends AuthenticationHandler {
@@ -79,6 +98,7 @@ export class SamlAuthenticationHandler extends AuthenticationHandler {
             mail: profile[config.authentication.profileExtractor.mail],
             firstName: profile[config.authentication.profileExtractor.firstName],
             lastName: profile[config.authentication.profileExtractor.lastName],
+            job: profile[config.authentication.profileExtractor.job],
         };
 
         try {

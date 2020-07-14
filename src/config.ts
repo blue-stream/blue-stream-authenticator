@@ -13,6 +13,7 @@ export const config = {
             GET_USER_BY_ID: 'getUserById',
             CREATE_USER: 'createUser',
         },
+        defaultLastName: ' ',
     },
     authentication: {
         required: true,
@@ -33,6 +34,7 @@ export const config = {
             mail: process.env.PROFILE_EXTRACTOR_MAIL || 'mail',
             firstName: process.env.PROFILE_EXTRACTOR_FIRST_NAME || 'givenName',
             lastName: process.env.PROFILE_EXTRACTOR_LAST_NAME || 'surName',
+            job: process.env.PROFILE_EXTRACTOR_JOB || 'job',
         },
         strategy: process.env.STRATEGY || 'shraga',
         shragaURL: process.env.SHRAGA_URL || 'http://localhost:3000',
