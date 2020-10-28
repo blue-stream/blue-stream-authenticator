@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.3] - 2020-09-08
+## [v2.0.0] - 2020-10-28
+
+### Added
+
+- REFACTOR([75](https://github.com/meateam/authentication-service/pull/75)): change firstName to job if not defined
+
+## [v1.3] - 2020-09-08
 
 ### Added
 
@@ -17,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - FirstName of a user will be his job if the name is not defined.
 
-[unreleased]: https://github.com/meateam/authentication-service/compare/v1.3...HEAD
-[1.3]: https://github.com/meateam/authentication-service/compare/v1.2...v1.3
+[unreleased]: https://github.com/meateam/authentication-service/compare/master...develop
+[v1.3]: https://github.com/meateam/authentication-service/compare/v1.2...v1.3
+[v2.0.0]: https://github.com/meateam/authentication-service/compare/v1.3...v2.0.0
